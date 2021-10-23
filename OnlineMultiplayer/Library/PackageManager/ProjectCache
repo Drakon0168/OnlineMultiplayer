@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637704522163259721
-    m_Hash: 1926248144
+      ticks: 637705500845719782
+    m_Hash: 2649009015
   m_LockFileStatus:
     m_FilePath: D:/Projects/OnlineMultiplayer/OnlineMultiplayer/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637704522163558476
-    m_Hash: 1276460166
+      ticks: 637705500846139352
+    m_Hash: 737861715
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_PackageAssets:
@@ -70,6 +70,8 @@ m_PackageAssets:
         - 1.11.2
         - 1.12.5
         - 1.13.5
+        - 1.14.1
+        - 1.15.1
         - 2.0.0-preview.6
         - 2.0.0-preview.8
         - 2.0.0-preview.15
@@ -84,6 +86,8 @@ m_PackageAssets:
         - 1.11.2
         - 1.12.5
         - 1.13.5
+        - 1.14.1
+        - 1.15.1
         - 2.0.0-preview.6
         - 2.0.0-preview.8
         - 2.0.0-preview.15
@@ -865,56 +869,6 @@ m_PackageAssets:
       repository:
         type: 
         url: 
-        revision: 
-        path: 
-    - packageId: io.colyseus.sdk@https://github.com/colyseus/colyseus-unity3d.git#upm
-      testable: 0
-      isDirectDependency: 1
-      version: 0.14.8
-      source: 5
-      resolvedPath: D:\Projects\OnlineMultiplayer\OnlineMultiplayer\Library\PackageCache\io.colyseus.sdk@65008fe25d
-      assetPath: Packages/io.colyseus.sdk
-      name: io.colyseus.sdk
-      displayName: Colyseus SDK
-      author:
-        name: Colyseus
-        email: contact@lucidsight.com
-        url: https://colyseus.io/
-      category: Networking
-      type: 
-      description: Colyseus Multiplayer SDK for Unity
-      status: 4
-      errors: []
-      versions:
-        all: []
-        compatible: []
-        verified: 
-      dependencies: []
-      resolvedDependencies: []
-      keywords:
-      - colyseus
-      - multiplayer
-      - networking
-      - authoritative
-      - netcode
-      registry:
-        id: 
-        name: 
-        url: 
-        scopes: []
-        isDefault: 0
-        capabilities: 0
-      hasRegistry: 0
-      hideInEditor: 1
-      entitlements:
-        isAllowed: 1
-      isAssetStorePackage: 0
-      datePublishedTicks: 0
-      documentationUrl: 
-      hasRepository: 1
-      repository:
-        type: git
-        url: https://github.com/colyseus/colyseus-unity3d.git
         revision: 
         path: 
     - packageId: com.unity.modules.ai@1.0.0
