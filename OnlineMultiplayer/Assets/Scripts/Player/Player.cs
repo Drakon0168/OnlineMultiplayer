@@ -7,22 +7,40 @@ using Mirror;
 public class Player : NetworkBehaviour
 {
     [SerializeField]
-    private float speed;
+    private float walkSpeed;
+    [SerializeField]
+    private float sprintSpeed;
     [SerializeField]
     private float moveForce;
+    private bool sprinting = false;
 
     private PlayerInput playerControls;
     private new Rigidbody rigidbody;
 
     private Vector3 moveInput;
+
+    public float Speed
+    {
+        get
+        {
+            if (sprinting)
+            {
+                return sprintSpeed;
+            }
+
+            return walkSpeed;
+        }
+    }
     
     #region Events
 
     public event System.Action OnMoveStart;
     public event System.Action OnMoveEnd;
+    public event System.Action OnSprintStart;
+    public event System.Action OnSprintEnd;
     public event System.Action OnJump;
     public event System.Action OnLand;
-    
+
     #endregion
 
     private void Awake()
@@ -31,18 +49,11 @@ public class Player : NetworkBehaviour
         playerControls = GetComponent<PlayerInput>();//new PlayerControls();
 
         InputActionMap gameplayMap = playerControls.actions.FindActionMap("Gameplay");
-        gameplayMap.FindAction("Move").canceled += (context) =>
-        {
-            Vector2 value = context.ReadValue<Vector2>();
-            moveInput = new Vector3(value.x, 0, value.y);
-            OnMoveEnd?.Invoke();
-        };
-        gameplayMap.FindAction("Move").performed += (context) =>
-        {
-            Vector2 value = context.ReadValue<Vector2>();
-            moveInput = new Vector3(value.x, 0, value.y);
-            OnMoveStart?.Invoke();
-        };
+        gameplayMap.FindAction("Move").performed += UpdateMove;
+        gameplayMap.FindAction("Move").canceled += UpdateMove;
+        gameplayMap.FindAction("Sprint").performed += ToggleSprint;
+        gameplayMap.FindAction("Sprint").canceled += ToggleSprint;
+        
     }
 
     [Client]
@@ -56,7 +67,7 @@ public class Player : NetworkBehaviour
 
     private void Move()
     {
-        Vector3 targetVelocity = moveInput * speed;
+        Vector3 targetVelocity = moveInput * Speed;
         Vector3 forceDirection = targetVelocity - rigidbody.velocity;
         float forceMagnitude = forceDirection.magnitude;
 
@@ -65,6 +76,27 @@ public class Player : NetworkBehaviour
             forceDirection /= forceMagnitude;
         }
 
-        rigidbody.AddForce(forceDirection * (forceMagnitude / (speed * 2)) * moveForce, ForceMode.Acceleration);
+        rigidbody.AddForce(forceDirection * (forceMagnitude / (Speed * 2)) * moveForce, ForceMode.Acceleration);
+    }
+
+    private void UpdateMove(InputAction.CallbackContext context)
+    {
+        Vector2 value = context.ReadValue<Vector2>();
+        moveInput = new Vector3(value.x, 0, value.y);
+        OnMoveStart?.Invoke();
+    }
+    
+    private void ToggleSprint(InputAction.CallbackContext context)
+    {
+        if (sprinting)
+        {
+            sprinting = false;
+            OnSprintEnd?.Invoke();
+        }
+        else
+        {
+            sprinting = true;
+            OnSprintStart?.Invoke();
+        }
     }
 }

@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
+using Mirror;
 using UnityEngine;
 
-public class AnimationManager : MonoBehaviour
+public class AnimationManager : NetworkBehaviour
 {
 	private static readonly int movingParameter = Animator.StringToHash("Moving");
 	private static readonly int animationSpeedParameter = Animator.StringToHash("Animation Speed");
@@ -12,8 +12,11 @@ public class AnimationManager : MonoBehaviour
 	private static readonly int jumpingParameter = Animator.StringToHash("Jumping");
 	private static readonly int triggerNumberParameter = Animator.StringToHash("Trigger Number");
 
+	[SerializeField]
 	private Animator _animator;
-	private new Rigidbody _rigidbody;
+	[SerializeField]
+	private Transform _meshTransform;
+	private Rigidbody _rigidbody;
 	private Player _player;
 
 	#region Accessors
@@ -54,20 +57,32 @@ public class AnimationManager : MonoBehaviour
 
 	private void Awake()
 	{
-		_rigidbody = GetComponentInParent<Rigidbody>();
-		_animator = GetComponent<Animator>();
-		_player = GetComponentInParent<Player>();
+		_rigidbody = GetComponent<Rigidbody>();
 
+		_animator.fireEvents = false;
+		
+		_player = GetComponent<Player>();
 		_player.OnMoveStart += () => { Moving = true; };
 		_player.OnMoveEnd += () => { Moving = false; };
+
+		AnimationSpeed = 1.0f;
 	}
 
+	[Client]
 	private void Update()
 	{
-		if (Moving)
+		if (hasAuthority)
 		{
-			var velocity2D = _rigidbody.velocity;
-			Velocity = new Vector2(velocity2D.x, velocity2D.z).magnitude;
+			if (Moving)
+			{
+				Vector3 velocity = _rigidbody.velocity;
+				Velocity = new Vector2(velocity.x, velocity.z).magnitude;
+
+				if (velocity.sqrMagnitude > 0.1f)
+				{
+					_meshTransform.rotation = Quaternion.LookRotation(new Vector3(velocity.x, 0, velocity.z).normalized);
+				}
+			}
 		}
 	}
 
